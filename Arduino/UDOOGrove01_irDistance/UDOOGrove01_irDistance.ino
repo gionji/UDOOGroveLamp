@@ -1,7 +1,8 @@
+#define IR_DISTANCE_PIN  A0
 #define DIST_IN_TH       100
-#define CYCLES_TH        5
-#define IR_CLOSEST_VALUE 900
-#define IR_FAREST_VALUE  10
+#define CYCLES_TH        4
+#define IR_CLOSEST_VALUE 775
+#define IR_FAREST_VALUE  200
 
 
 void setup() {
@@ -10,37 +11,29 @@ void setup() {
 }
 
 
-int cyclesUnderTh  = 0;
-int lightIntensity = 255;
-
 void loop() {
 
-  bool isIntensityChanged = controlDistance(A0, &lightIntensity);
-
-  if(isIntensityChanged)
-    Serial.println(lightIntensity);
+  Serial.print("Raw sensor value: ");
+  Serial.print( analogRead(IR_DISTANCE_PIN) );
+  Serial.print(" - Raw Distance: ");
+  Serial.print( getIrDistance(IR_DISTANCE_PIN) );
+  Serial.print(" - Distance in centimeters: ");
+  Serial.println( getIrDistanceInCm(IR_DISTANCE_PIN) );
   
-  delay(300);
+  delay(1000);
 }
 
 
-int controlDistance(int pin, int* intensity){
-  int irDistance = getIrDistanceInCm(pin);
-  int a = 0;
-  
-  if(irDistance < DIST_IN_TH)
-    cyclesUnderTh++;
-  else
-    cyclesUnderTh = 0; 
-
-  if(cyclesUnderTh > CYCLES_TH){
-    *intensity = map(irDistance, 0, 100, 0 , 255);
-    return 1;
-  }
-  return 0;
-}
-
-int getIrDistanceInCm(int pin){
+// IR distance sensor methods
+int getIrDistance(int pin){
   int a = analogRead(pin);
   return map(a, IR_CLOSEST_VALUE, IR_FAREST_VALUE, 10, 100);
-  }
+}
+
+// IR distance sensor methods
+int getIrDistanceInCm(int pin){
+  float volts = analogRead(pin)*0.00322265;
+  float distance = 65*pow(volts, -1.10);
+  return (int)distance;
+}
+
