@@ -1,9 +1,9 @@
 
 #define SOUND_SENSOR_PIN A2
-#define SOUND_BIAS 721
-#define SOUND_TH 150
+#define SOUND_BIAS       721
+#define SOUND_TH         150
 
-#define SMALL_LED_PIN 13
+#define SMALL_LED_PIN    13
 
 
 void setup() {

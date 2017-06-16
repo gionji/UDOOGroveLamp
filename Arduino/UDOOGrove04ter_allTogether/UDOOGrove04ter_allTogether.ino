@@ -6,13 +6,14 @@
  */
 #include <ChainableLED.h>
 
-
+#define IR_DISTANCE_PIN  A0
 #define DIST_IN_TH       100
-#define CYCLES_TH        10
-#define IR_CLOSEST_VALUE 700
-#define IR_FAREST_VALUE  10
+#define CYCLES_TH        4
+#define IR_CLOSEST_VALUE 775
+#define IR_FAREST_VALUE  200
 
-#define NUM_LEDS  1
+#define LED_PIN            7
+#define NUM_LEDS           1
 
 #define BUTTON_PIN 2
 #define SMALL_LED_PIN 13
@@ -23,7 +24,7 @@
 
 boolean isLightOn = false;
 
-ChainableLED leds(7, 8, NUM_LEDS);
+ChainableLED leds(LED_PIN, LED_PIN+1, NUM_LEDS);
 
 
 // IR Distance variables
@@ -52,36 +53,41 @@ void loop() {
     isLightOn = !isLightOn; 
     
     if(isLightOn){
-      brightness = 1.0;
+      lightIntensity = 255;
       Serial.println(" so I turn on the light!");
     }
     else{
-      brightness = 0.0;
+      lightIntensity = 0;
       Serial.println(" so I turn off the light!");
     }
     
-    leds.setColorHSB(0, hue, 1.0, brightness * 0.65);
+    leds.setColorHSB(0, hue, 1.0, ((float)lightIntensity/255.0) * 0.65);
     delay(LONG_PRESS_TIMEOUT);
   }
 
   hue = getPotentiometerPercentage();
   
-  bool isIntensityChanged = controlDistance(A0, &lightIntensity);
+  bool isIntensityChanged = controlDistance(IR_DISTANCE_PIN, &lightIntensity);
 
-  if(lightIntensity < 0) lightIntensity = 0;
+  if(lightIntensity < 0) {
+    lightIntensity = 0;
+    isLightOn = false;
+  }
+
+  if(isIntensityChanged){
+    isLightOn = true;
+  }
 
   brightness = (float) lightIntensity / 255.0;
   leds.setColorHSB(0, hue, 1.0, brightness * 0.65);
- 
   
   delay(50);
- 
 }
 
 
 // IR distance methods
 int controlDistance(int pin, int* intensity){
-  int irDistance = getIrDistanceInCm(pin);
+  int irDistance = getIrDistance(pin);
   int a = 0;
   
   if(irDistance < DIST_IN_TH)
@@ -96,7 +102,7 @@ int controlDistance(int pin, int* intensity){
   return 0;
 }
 
-int getIrDistanceInCm(int pin){
+int getIrDistance(int pin){
   int a = analogRead(pin);
   return map(a, IR_CLOSEST_VALUE, IR_FAREST_VALUE, 10, 100);
   }

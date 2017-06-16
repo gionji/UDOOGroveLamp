@@ -8,9 +8,9 @@
 
 #define IR_DISTANCE_PIN    A0
 #define DIST_IN_TH         100
-#define CYCLES_TH          10
-#define IR_CLOSEST_VALUE   700
-#define IR_FAREST_VALUE    10
+#define CYCLES_TH          4
+#define IR_CLOSEST_VALUE   775
+#define IR_FAREST_VALUE    200
 
 #define LED_PIN            7
 #define NUM_LEDS           1
