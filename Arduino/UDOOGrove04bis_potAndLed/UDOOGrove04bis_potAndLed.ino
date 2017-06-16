@@ -4,12 +4,13 @@
  */
 #include <ChainableLED.h>
 
-#define POTENTIOMETER_PIN A1
-#define SMALL_LED_PIN 13
+#define POTENTIOMETER_PIN  A1
+#define SMALL_LED_PIN      13
 
-#define NUM_LEDS  1
+#define LED_PIN            7
+#define NUM_LEDS           1
 
-ChainableLED leds(7, 8, NUM_LEDS);
+ChainableLED leds(LED_PIN, LED_PIN+1, NUM_LEDS);
 
 void setup() {
   Serial.begin(9600);
@@ -39,14 +40,6 @@ int getPotentiometerValue(){
 float getPotentiometerPercentage(){
   float value = (float)analogRead(POTENTIOMETER_PIN) / 1024.0;
   return value;
-}
-
-void  turnOnSmallLight(){
-  digitalWrite(SMALL_LED_PIN, HIGH);
-}
-
-void  turnOffSmallLight(){
-  digitalWrite(SMALL_LED_PIN, LOW);
 }
 
 

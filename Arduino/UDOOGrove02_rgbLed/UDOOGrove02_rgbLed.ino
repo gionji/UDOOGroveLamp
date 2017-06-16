@@ -6,10 +6,11 @@
  */
 #include <ChainableLED.h>
 
-#define NUM_LEDS  1
+#define LED_PIN            7
+#define NUM_LEDS           1
 
+ChainableLED leds(LED_PIN, LED_PIN+1, NUM_LEDS);
 
-ChainableLED leds(7, 8, NUM_LEDS);
 
 void setup() {
   Serial.begin(9600);

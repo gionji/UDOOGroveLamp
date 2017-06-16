@@ -6,16 +6,16 @@
  */
 #include <ChainableLED.h>
 
-
+#define IR_DISTANCE_PIN  A0
 #define DIST_IN_TH       100
-#define CYCLES_TH        10
-#define IR_CLOSEST_VALUE 700
-#define IR_FAREST_VALUE  10
+#define CYCLES_TH        4
+#define IR_CLOSEST_VALUE 775
+#define IR_FAREST_VALUE  200
 
-#define NUM_LEDS  1
+#define LED_PIN            7
+#define NUM_LEDS           1
 
-
-ChainableLED leds(7, 8, NUM_LEDS);
+ChainableLED leds(LED_PIN, LED_PIN+1, NUM_LEDS);
 
 
 // IR Distance variables
@@ -31,10 +31,9 @@ void setup() {
 }
 
 
-
 void loop() {
 
-  bool isIntensityChanged = controlDistance(A0, &lightIntensity);
+  bool isIntensityChanged = controlDistance(IR_DISTANCE_PIN, &lightIntensity);
 
   if(lightIntensity < 0) lightIntensity = 0;
 
@@ -48,7 +47,7 @@ void loop() {
 
 // IR distance methods
 int controlDistance(int pin, int* intensity){
-  int irDistance = getIrDistanceInCm(pin);
+  int irDistance = getIrDistance(pin);
   int a = 0;
   
   if(irDistance < DIST_IN_TH)
@@ -63,7 +62,7 @@ int controlDistance(int pin, int* intensity){
   return 0;
 }
 
-int getIrDistanceInCm(int pin){
+int getIrDistance(int pin){
   int a = analogRead(pin);
   return map(a, IR_CLOSEST_VALUE, IR_FAREST_VALUE, 10, 100);
   }

@@ -1,5 +1,4 @@
 #define POTENTIOMETER_PIN A1
-#define SMALL_LED_PIN 13
 
 
 void setup() {
@@ -31,18 +30,7 @@ int getPotentiometerValue(){
   return value >> 2;
 }
 
-
 float getPotentiometerPercentage(){
   float value = (float)analogRead(POTENTIOMETER_PIN) / 1024.0;
   return value;
 }
-
-void  turnOnSmallLight(){
-  digitalWrite(SMALL_LED_PIN, HIGH);
-}
-
-void  turnOffSmallLight(){
-  digitalWrite(SMALL_LED_PIN, LOW);
-}
-
-

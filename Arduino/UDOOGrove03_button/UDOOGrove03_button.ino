@@ -1,5 +1,5 @@
-#define BUTTON_PIN 2
-#define SMALL_LED_PIN 13
+#define BUTTON_PIN         2
+#define SMALL_LED_PIN      13
 #define LONG_PRESS_TIMEOUT 1000
 
 boolean isLightOn = false;
