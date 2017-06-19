@@ -5,12 +5,13 @@
  * 
  */
 #include <ChainableLED.h>
+#include <Servo.h>
 
 #define IR_DISTANCE_PIN    A0
 #define DIST_IN_TH         100
-#define CYCLES_TH          10
-#define IR_CLOSEST_VALUE   700
-#define IR_FAREST_VALUE    10
+#define CYCLES_TH          4
+#define IR_CLOSEST_VALUE   775
+#define IR_FAREST_VALUE    200
 
 #define LED_PIN            7
 #define NUM_LEDS           1
@@ -31,7 +32,7 @@
 #define BUZZER_PIN         3
 
 #define SERVO_PIN          5
-#include <Servo.h>
+
 Servo myservo;  
 
 boolean isLightOn = false;
@@ -54,6 +55,7 @@ void setup() {
   
   pinMode(BUTTON_PIN    , INPUT);
   pinMode(SMALL_LED_PIN, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
 
   myservo.attach(SERVO_PIN);
 
@@ -80,11 +82,11 @@ void loop() {
     isLightOn = !isLightOn; 
     
     if(isLightOn){
-      brightness = 1.0;
+      turnOnRGBLed();
       Serial.println(" so I turn on the light!");
     }
     else{
-      brightness = 0.0;
+      turnOffRGBLed();
       Serial.println(" so I turn off the light!");
     }
     
@@ -103,7 +105,7 @@ void loop() {
 
 // IR distance methods
 bool controlDistance(int pin, int* intensity){
-  int irDistance = getIrDistanceInCm(pin);
+  int irDistance = getIrDistance(pin);
   int a = 0;
   
   if(irDistance < DIST_IN_TH)
@@ -119,7 +121,7 @@ bool controlDistance(int pin, int* intensity){
 }
 
 bool controlDistance(int pin, float* intensity){
-  int irDistance = getIrDistanceInCm(pin);
+  int irDistance = getIrDistance(pin);
   int a = 0;
   
   if(irDistance < DIST_IN_TH)
@@ -136,11 +138,20 @@ bool controlDistance(int pin, float* intensity){
   return false;
 }
 
-int getIrDistanceInCm(int pin){
+int getIrDistance(int pin){
   int a = analogRead(pin);
   return map(a, IR_CLOSEST_VALUE, IR_FAREST_VALUE, 10, 100);
   }
 
+
+//RGB bled methods
+void turnOffRGBLed(){
+  brightness = 0.0;
+  }
+
+void turnOnRGBLed(){
+  brightness = 1.0;
+  }
 
 // Button methods
 boolean checkButtonState(){
@@ -244,8 +255,38 @@ void setServoPosition(float pos){
 
 // Communication methods
 void decodeCommand(char data){
+
+  Serial.print("Recived data: ");
+  Serial.print(data);
+  
   if(data >= 48 && data <= 57){
-    setServoPosition((int)((data-48) * 18));
+    Serial.print(" so i set the servo at ");    
+    Serial.println((int)(data-48) *19);
+    myservo.write((int)(data-48) *19);
   }  
+  else if(data == 'a'){
+    Serial.println(" so i play the melody!"); 
+    playSong();
+  }   
+  else if(data == 'b'){
+    Serial.println(" so i play the buzz!"); 
+    playBuzz(1000);
+  } 
+  else if(data == 'c'){
+    Serial.println(" so i turn off the RGB led!"); 
+    turnOffRGBLed();
+  }
+  else if(data == 'd'){
+    Serial.println(" so i turn on the RGB led!"); 
+    turnOnRGBLed();
+  }
+  else if(data == 'e'){
+    Serial.println(" so i move the servo!"); 
+    shakeHand(3);
+  }
+  else{    
+    Serial.println(" is not a valid command!"); 
+  }
+    
     
 }

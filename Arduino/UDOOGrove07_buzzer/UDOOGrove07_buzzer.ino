@@ -14,6 +14,8 @@ void loop(){
 
   playBuzz(1000);
 
+  playSong();
+
 }
 
 // Buzzer Methods
