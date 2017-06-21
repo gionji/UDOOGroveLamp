@@ -11,12 +11,8 @@ root = Tk()
 root.attributes("-fullscreen", True)
 time1 = ''
 
-image= Image.open("eyesbg.jpg")
-backImg = PhotoImage(image)
-backImgLabel = Label(root, image=backImg)
-backImgLabel.place(x=0,y=0, relwidth=1, relheight=1)
 
-clock = Label(root, font=('verdana', 120, 'bold'), fg='white')
+clock = Label(root, font=('verdana', 120, 'bold'), fg='black')
 clock.pack(fill=BOTH, expand=1)
 def tick():
     global time1
