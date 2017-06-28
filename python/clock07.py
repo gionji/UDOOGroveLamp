@@ -77,7 +77,6 @@ clock.place(relx=0.35, rely=0.75, anchor=tk.CENTER)
 # tk.Button(root, text = "Settings").place(relx=0.1, rely=0.1, anchor=tk.CENTER)
 tk.Button(root, text = "Alarm", command=playBuzz).place(relx=0.93, rely=0.2, anchor=tk.CENTER)   
 
-
 tk.Button(root, text = "h+", command=increaseHours).place(relx=0.10, rely=0.05, anchor=tk.CENTER)    
 tk.Button(root, text = "h-", command=decreaseHours).place(relx=0.10, rely=0.2, anchor=tk.CENTER)    
 tk.Button(root, text = "m+", command=increaseMins).place(relx=0.18, rely=0.05, anchor=tk.CENTER)    
@@ -87,6 +86,12 @@ def tick():
     global time1
     # get the current local time from the PC
     time2 = time.strftime('%H:%M')
+    hour, minute = time.strftime("%H,%M").split(',')
+    
+    
+    if (int(hour) == int(alarmHour)) and (int(minute) == int(alarmMinute)):
+		print 'ring'
+    
     # if time string has changed, update it
     if time2 != time1:
         time1 = time2
